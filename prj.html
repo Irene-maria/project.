@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Student Academic Planner</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #ffe6f0;
+      color: #2c2c2c;
+      margin: 0;
+      display: flex;
+    }
+
+    /* Sidebar */
+    nav {
+      background-color: #fff0f5;
+      padding: 20px 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      width: 200px;
+      height: 100vh;
+      border-right: 1px solid #ffc0cb;
+      box-shadow: 2px 0 6px rgba(255, 182, 193, 0.2);
+      position: fixed;
+      top: 0;
+      left: 0;
+    }
+
+    nav button {
+      background-color: transparent;
+      border: 2px solid transparent;
+      padding: 10px;
+      width: 100%;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+      color: #cc3366;
+      transition: all 0.3s ease;
+      text-align: left;
+    }
+
+    nav button:hover {
+      background-color: #ffe0eb;
+      border-color: #ffb6c1;
+    }
+
+    /* Main content layout */
+    .content {
+      margin-left: 200px;
+      padding: 20px;
+      flex: 1;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+    }
+
+    h1 {
+      font-weight: 600;
+      color: #b03060;
+    }
+
+    #clock {
+      font-size: 1.2em;
+      color: #cc3366;
+    }
+
+    .page {
+      display: none;
+    }
+
+    .active {
+      display: block;
+    }
+
+    .box {
+      background-color: #ffffff;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 12px rgba(255, 192, 203, 0.2);
+      max-width: 800px;
+      margin: auto;
+      border: 1px solid #ffd1dc;
+    }
+
+    input, button, textarea {
+      font-family: inherit;
+      margin-top: 10px;
+      width: 100%;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ffc0cb;
+      font-size: 1rem;
+      background-color: #fffafc;
+      color: #333;
+    }
+
+    input:focus, textarea:focus {
+      border-color: #ff69b4;
+      outline: none;
+      background-color: #fff0f5;
+    }
+
+    #timer {
+      font-size: 2em;
+      text-align: center;
+      margin: 20px 0;
+      color: #cc3366;
+    }
+
+    .quote {
+      text-align: center;
+      font-style: italic;
+      margin-top: 20px;
+      font-size: 1.1em;
+      color: #aa4466;
+    }
+
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    li.task {
+      background: #fff0f5;
+      margin: 8px 0;
+      padding: 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    li.task.completed {
+      text-decoration: line-through;
+      background: #d3f9d8;
+    }
+
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 10px;
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .calendar-grid div {
+      padding: 10px;
+      background: #fff;
+      border-radius: 6px;
+      border: 1px solid #ffd1dc;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <button onclick="showPage('home')">Home</button>
+    <button onclick="showPage('todo')">To-Do List</button>
+    <button onclick="showPage('calendar')">Calendar</button>
+    <button onclick="showPage('pomodoro')">Pomodoro</button>
+    <button onclick="showPage('grades')">Subjects</button>
+  </nav>
+
+  <div class="content">
+    <header>
+      <h1>Student Academic Planner</h1>
+      <div id="clock"></div>
+    </header>
+
+    <div id="home" class="page active">
+      <div class="box">
+        <h2>Welcome!</h2>
+        <p>Your academic planner is here to help you stay on track.</p>
+        <div class="quote" id="dynamicQuote">"Believe you can and you're halfway there." – Theodore Roosevelt</div>
+        <button onclick="changeQuote()">Change Quote</button>
+      </div>
+    </div>
+
+    <div id="todo" class="page">
+      <div class="box">
+        <h2>To-Do List</h2>
+        <input id="taskInput" type="text" placeholder="Enter your task" />
+        <button onclick="addTask()">Add Task</button>
+        <ul id="taskList"></ul>
+      </div>
+    </div>
+
+    <div id="calendar" class="page">
+      <div class="box">
+        <h2>Calendar View</h2>
+        <div class="calendar-grid">
+          <div>Mon<br><small>Math Quiz</small></div>
+          <div>Tue<br><small>Project Due</small></div>
+          <div>Wed<br><small>Free Study</small></div>
+          <div>Thu<br><small>Science Lab</small></div>
+          <div>Fri<br><small>Essay Submission</small></div>
+          <div>Sat<br><small>Review</small></div>
+          <div>Sun<br><small>Relax</small></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="pomodoro" class="page">
+      <div class="box">
+        <h2>Pomodoro Timer</h2>
+        <div id="timer">25:00</div>
+        <button onclick="startTimer()">Start</button>
+        <button onclick="resetTimer()">Reset</button>
+      </div>
+    </div>
+
+    <div id="grades" class="page">
+      <div class="box">
+        <h2>Subjects & Grades</h2>
+        <ul id="gradeList"></ul>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Navigation
+    function showPage(pageId) {
+      document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+      document.getElementById(pageId).classList.add('active');
+    }
+
+    // Quotes
+    const quotes = [
+      `"Success is not final, failure is not fatal: It is the courage to continue that counts." – Winston Churchill`,
+      `"The secret of getting ahead is getting started." – Mark Twain`,
+      `"Don't watch the clock; do what it does. Keep going." – Sam Levenson`,
+      `"Believe you can and you're halfway there." – Theodore Roosevelt`
+    ];
+    function changeQuote() {
+      const quoteBox = document.getElementById("dynamicQuote");
+      const newQuote = quotes[Math.floor(Math.random() * quotes.length)];
+      quoteBox.textContent = newQuote;
+    }
+
+    // To-Do List
+    function addTask() {
+      const taskInput = document.getElementById('taskInput');
+      const taskList = document.getElementById('taskList');
+      if (taskInput.value.trim() !== '') {
+        const li = document.createElement('li');
+        li.textContent = taskInput.value;
+        li.className = 'task';
+        li.onclick = () => li.classList.toggle('completed');
+        taskList.appendChild(li);
+        taskInput.value = '';
+      }
+    }
+
+    // Pomodoro Timer
+    let timer;
+    let timeLeft = 1500;
+    function updateTimerDisplay() {
+      const minutes = Math.floor(timeLeft / 60);
+      const seconds = timeLeft % 60;
+      document.getElementById('timer').textContent =
+        `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    }
+
+    function startTimer() {
+      if (!timer) {
+        timer = setInterval(() => {
+          if (timeLeft > 0) {
+            timeLeft--;
+            updateTimerDisplay();
+          } else {
+            clearInterval(timer);
+            timer = null;
+            alert("Time's up! Take a break!");
+          }
+        }, 1000);
+      }
+    }
+
+    function resetTimer() {
+      clearInterval(timer);
+      timer = null;
+      timeLeft = 1500;
+      updateTimerDisplay();
+    }
+
+    // Subjects (simulating JSON)
+    const gradesData = [
+      { subject: "Math", grade: "A" },
+      { subject: "Science", grade: "B+" },
+      { subject: "English", grade: "A-" },
+      { subject: "History", grade: "B" },
+    ];
+
+    function loadGrades() {
+      const gradeList = document.getElementById('gradeList');
+      gradeList.innerHTML = '';
+      gradesData.forEach(entry => {
+        const li = document.createElement('li');
+        li.textContent = `${entry.subject}: ${entry.grade}`;
+        gradeList.appendChild(li);
+      });
+    }
+
+    // Clock
+    function updateClock() {
+      const now = new Date();
+      const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      document.getElementById('clock').textContent = time;
+    }
+
+    setInterval(updateClock, 1000);
+
+    window.onload = function() {
+      updateTimerDisplay();
+      loadGrades();
+      updateClock();
+    };
+  </script>
+</body>
+</html>
